@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
 #
 # ipyturtle3.py: an ipycanvas based turtle graphics module for Python
 # implemented as wrapper around turtle.py which ships with python
-# Version 0.0a - 14. 1. 2022
+# Version 0.1.0 - 14. 1. 2022
 # TODO: importlib.reload() is required to run this now. This issue to be addressed. 
 #
 # Copyright [2022] [William Navaraj]
@@ -100,11 +102,11 @@ class Canvas(ipycanvas.Canvas):
         self.canvwidth=0
         self.canvheight=0
         self.scrollregion=None
-        self.graph_objects=[]
+        self.canvas_objects=[]
 
         self.object_id=1
         self.background_color='white'
-        self.graph_objects.append({"ID":0,"BackgroundColor":self.background_color})
+        self.canvas_objects.append({"ID":0,"BackgroundColor":self.background_color})
 
 
     def cget(self,what="width"):
@@ -125,15 +127,15 @@ class Canvas(ipycanvas.Canvas):
 
     def delete(self, what):
         if what=="all":
-            self.graph_objects=[]
+            self.canvas_objects=[]
         self.background_color='white'
-        self.graph_objects.append({"ID":0,"BackgroundColor":self.background_color,"Type":"BG"})
+        self.canvas_objects.append({"ID":0,"BackgroundColor":self.background_color,"Type":"BG"})
 
     def clear(self):
         """Clear the entire canvas. This is the same as calling ``clear_rect(0, 0, canvas.width, canvas.height)``."""
-        self.graph_objects=[]
+        self.canvas_objects=[]
         self.background_color='white'
-        self.graph_objects.append({"ID":0,"BackgroundColor":self.background_color,"Type":"BG"})
+        self.canvas_objects.append({"ID":0,"BackgroundColor":self.background_color,"Type":"BG"})
         super().clear()
             
     def create_image(self, x, y,image_file_name):
@@ -144,24 +146,24 @@ class Canvas(ipycanvas.Canvas):
             img=Image.from_file(image_file_name)
             isNull=False
         self.object_id=self.object_id+1
-        self.graph_objects.append({"ID":self.object_id,"Type":"Image","Image":img,"XPos":x,"YPos":y,"isNull":isNull})
+        self.canvas_objects.append({"ID":self.object_id,"Type":"Image","Image":img,"XPos":x,"YPos":y,"isNull":isNull})
         return self.object_id
 
     def create_line(self,a=0, b=0, c=0, d=0, fill="", width=2,
                                    capstyle = "ROUND"):
         self.object_id=self.object_id+1
-        self.graph_objects.append({"ID":self.object_id,"Type":"Line","LineSegments":[a,b,c,d],"Fill":fill,"Width":width})
+        self.canvas_objects.append({"ID":self.object_id,"Type":"Line","LineSegments":[a,b,c,d],"Fill":fill,"Width":width})
         return self.object_id
     def create_polygon(self,pg, fill="", width=2,
                                    capstyle = "ROUND",outline=""):
         self.object_id=self.object_id+1
-        self.graph_objects.append({"ID":self.object_id,"Type":"Polygon","Polygon":pg,"Fill":fill,"Width":width,"Outline":outline,"Top":False})
+        self.canvas_objects.append({"ID":self.object_id,"Type":"Polygon","Polygon":pg,"Fill":fill,"Width":width,"Outline":outline,"Top":False})
         return self.object_id
     def after(self,ms):
 
         time.sleep(ms*0.001)
     def coords(self,pg_item,*coords_list):
-        for i in self.graph_objects:
+        for i in self.canvas_objects:
             if i["ID"]==pg_item and i["Type"]=="Polygon":
                 i["Polygon"]=copy.deepcopy([*coords_list])
                 return i["Polygon"]
@@ -169,7 +171,7 @@ class Canvas(ipycanvas.Canvas):
                 i["LineSegments"]=copy.deepcopy([*coords_list])
                 return i["LineSegments"]
     def itemconfigure(self,pg_item,fill=None,width=None,outline=None):
-        for i in self.graph_objects:
+        for i in self.canvas_objects:
             if i["ID"]==pg_item:
                 if(fill is not None):
                     i["Fill"]=fill
@@ -179,10 +181,10 @@ class Canvas(ipycanvas.Canvas):
                     i["Outline"]=outline
                 break
     def tag_raise(self,pg_item):
-        for i in range(len(self.graph_objects)):
-            if self.graph_objects[i]["ID"]==pg_item:
-                a=self.graph_objects.pop()
-                self.graph_objects.append(a)
+        for i in range(len(self.canvas_objects)):
+            if self.canvas_objects[i]["ID"]==pg_item:
+                a=self.canvas_objects.pop()
+                self.canvas_objects.append(a)
                 break
 
         
@@ -198,7 +200,7 @@ class Canvas(ipycanvas.Canvas):
         if color is not None:
             self.background_color=color
             
-            self.graph_objects[0]["BackgroundColor"]=webcolors.name_to_rgb(color)
+            self.canvas_objects[0]["BackgroundColor"]=webcolors.name_to_rgb(color)
 
         return self.background_color
 
@@ -299,8 +301,9 @@ class TurtleScreen(turtle.TurtleScreen):
 
     def _update(self):
         """Redraw graphics items on canvas
+           TODO: Multicanvas implementation
         """
-        for i in self.cv.graph_objects:
+        for i in self.cv.canvas_objects:
             if i["ID"]==0:
                 self.cv.fill_style=self.cv.background_color
                 self.cv.fill_rect(0, 0, self.cv.canvwidth, self.cv.canvheight)
