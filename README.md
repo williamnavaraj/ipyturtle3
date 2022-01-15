@@ -4,6 +4,11 @@
 
 https://github.com/williamnavaraj/ipyturtle3/blob/main/Images/TurtleWin.gif
 
+## Installation
+
+```
+pip install ipyturtle3
+```
 ## Example ipynb code. Run this in a cell.
 
 ```
