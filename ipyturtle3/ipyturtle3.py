@@ -4,7 +4,6 @@
 # ipyturtle3.py: an ipycanvas based turtle graphics module for Python
 # implemented as wrapper around turtle.py which ships with python
 # Version 0.1.0 - 14. 1. 2022
-# TODO: importlib.reload() is required to run this now. This issue to be addressed. 
 #
 # Copyright [2022] [William Navaraj]
 
@@ -128,8 +127,12 @@ class Canvas(ipycanvas.Canvas):
     def delete(self, what):
         if what=="all":
             self.canvas_objects=[]
-        self.background_color='white'
-        self.canvas_objects.append({"ID":0,"BackgroundColor":self.background_color,"Type":"BG"})
+            self.background_color='white'
+            self.canvas_objects.append({"ID":0,"BackgroundColor":self.background_color,"Type":"BG"})
+        else:
+            for i in self.canvas_objects:
+                if(i["ID"]==what):
+                    self.canvas_objects.remove(i)
 
     def clear(self):
         """Clear the entire canvas. This is the same as calling ``clear_rect(0, 0, canvas.width, canvas.height)``."""
@@ -252,9 +255,26 @@ class TurtleScreen(turtle.TurtleScreen):
         self.clear()
         TurtleScreen._RUNNING=True
     def register_shape(self, name, shape=None):
-        raise turtle.TurtleGraphicsError("Not implemented for ipython yet")
+        
+
+        if shape is None:
+            # image
+            if name.lower().endswith(".gif"):
+                #shape = Shape("image", self._image(name))
+                raise turtle.TurtleGraphicsError("Image registration: Not implemented for ipython yet")
+            else:
+                raise turtle.TurtleGraphicsError("Image registration: Not implemented for ipython yet")
+                #raise TurtleGraphicsError("Bad arguments for register_shape.\n"
+                #                            + "Use  help(register_shape)" )
+        elif isinstance(shape, tuple):
+            shape = Shape("polygon", shape)
+        ## else shape assumed to be Shape-instance
+        self._shapes[name] = shape
 
     def _blankimage(self):
+        img=ipycanvas.Canvas.create_image_data(self.cv,1,1)
+        return img
+    def _image(self):
         img=ipycanvas.Canvas.create_image_data(self.cv,1,1)
         return img
     def clear(self):
@@ -303,27 +323,32 @@ class TurtleScreen(turtle.TurtleScreen):
         """Redraw graphics items on canvas
            TODO: Multicanvas implementation
         """
-        for i in self.cv.canvas_objects:
-            if i["ID"]==0:
-                self.cv.fill_style=self.cv.background_color
-                self.cv.fill_rect(0, 0, self.cv.canvwidth, self.cv.canvheight)
-            elif i["Type"]=="Polygon":
-                if i['Fill'] !="":
-                    self.cv.fill_style=i['Fill']
-                if i['Outline'] != "":
-                    self.cv.stroke_style=i['Outline']
-                L=i["Polygon"]
-                pg=[(L[i]+self.cv.canvwidth/2,L[i+1]+self.cv.canvheight/2) for i in range(0, len(L),2)]
-                self.cv.fill_polygon(pg)
-                self.cv.stroke_polygon(pg)
-            elif i["Type"]=="Line":
-                if i['Fill'] !="":
-                    self.cv.fill_style=i['Fill']
-                    self.cv.stroke_style=i['Fill']
-                L=i["LineSegments"]         
-                if (len(L)>=4):
-                    pg=[(L[i]+self.cv.canvwidth/2,L[i+1]+self.cv.canvheight/2) for i in range(0, len(L),2)] #[L[0]+self.cv.canvwidth/2,L[1]+self.cv.canvheight/2, L[2]+self.cv.canvwidth/2,L[3]+self.cv.canvheight/2 ]
-                    self.cv.stroke_lines(pg)
+        with hold_canvas(self.cv):
+            for i in self.cv.canvas_objects:
+                if i["ID"]==0:
+                    self.cv.fill_style=self.cv.background_color
+                    self.cv.fill_rect(0, 0, self.cv.canvwidth, self.cv.canvheight)
+                elif i["Type"]=="Polygon":
+                    if i['Fill'] !="":
+                        self.cv.fill_style=i['Fill']
+                    if i['Outline'] != "":
+                        self.cv.stroke_style=i['Outline']
+                    L=i["Polygon"]
+                    pg=[(L[i]+self.cv.canvwidth/2,L[i+1]+self.cv.canvheight/2) for i in range(0, len(L),2)]
+                    self.cv.fill_polygon(pg)
+                    self.cv.stroke_polygon(pg)
+                elif i["Type"]=="Line":
+                    if i['Fill'] !="":
+                        self.cv.fill_style=i['Fill']
+                        self.cv.stroke_style=i['Fill']
+                    L=i["LineSegments"]         
+                    if (len(L)>=4):
+                        pg=[(L[i]+self.cv.canvwidth/2,L[i+1]+self.cv.canvheight/2) for i in range(0, len(L),2)] #[L[0]+self.cv.canvwidth/2,L[1]+self.cv.canvheight/2, L[2]+self.cv.canvwidth/2,L[3]+self.cv.canvheight/2 ]
+                        self.cv.stroke_lines(pg)
+                elif i["Type"]=="Image":
+                    if(i["isNull"]==False):
+                        #pass
+                        self.cv.draw_image(i["Image"], i["XPos"], i["YPos"])
         self.cv
 
     def _bgcolor(self, color=None):

@@ -4,3 +4,4 @@ ipyturtle3.egg-info/
 *.pyc
 dist/
 /__pycache__/
+HowToBuild.txt

@@ -4,7 +4,7 @@
 
 https://github.com/williamnavaraj/ipyturtle3/blob/main/Images/TurtleWin.gif
 
-## Installation
+## Usage: Installation
 
 ```
 pip install ipyturtle3

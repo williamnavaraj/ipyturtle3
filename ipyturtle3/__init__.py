@@ -9,9 +9,9 @@ Turtle graphics based on ipycanvas which can run on jupyter lab/vscode.
 ipyturtle and ipyturtle2 was found to run only on classic jupyter notebook. 
 This was developed to solve this.
 """
-from .ipyturtle3 import Turtle, Canvas, TurtleScreen,hold_canvas
+from .ipyturtle3 import Turtle, Canvas, TurtleScreen,hold_canvas, Shape
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = 'William Navaraj'
 __homepage__ = 'https://github.com/williamnavaraj'
-__all__ =['Turtle','Canvas','TurtleScreen','hold_canvas']
+__all__ =['Turtle','Canvas','TurtleScreen','hold_canvas','Shape']
