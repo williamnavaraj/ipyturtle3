@@ -195,15 +195,18 @@ class Canvas(ipycanvas.Canvas):
 
     def winfo_rgb(self, color):
         """Return a tuple of integer RGB values in range(65536) for color in this widget."""
+        import webcolors
+        try:
+            return webcolors.name_to_rgb(color)
+        except:
+            return webcolors.hex_to_rgb(color)
 
-        return(webcolors.name_to_rgb(color))
     def bgcolor(self, color=None):
         """Set canvas' backgroundcolor if color is not None,
         else return backgroundcolor."""
         if color is not None:
             self.background_color=color
-            
-            self.canvas_objects[0]["BackgroundColor"]=webcolors.name_to_rgb(color)
+            self.canvas_objects[0]["BackgroundColor"]=self.winfo_rgb(color)
 
         return self.background_color
 
