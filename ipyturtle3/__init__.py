@@ -11,7 +11,7 @@ This was developed to solve this.
 """
 from .ipyturtle3 import Turtle, Canvas, TurtleScreen,hold_canvas, Shape
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = 'William Navaraj'
 __homepage__ = 'https://github.com/williamnavaraj'
 __all__ =['Turtle','Canvas','TurtleScreen','hold_canvas','Shape']
