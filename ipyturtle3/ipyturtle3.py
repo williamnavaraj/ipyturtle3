@@ -3,7 +3,7 @@
 #
 # ipyturtle3.py: an ipycanvas based turtle graphics module for Python
 # implemented as wrapper around turtle.py which ships with python
-# Version 0.1.0 - 14. 1. 2022
+# Version 0.1.3 - 19. 5. 2022
 #
 # Copyright [2022] [William Navaraj]
 
@@ -95,11 +95,12 @@ class Turtle(turtle.Turtle):
         super().right(angle)
 
 class Canvas(ipycanvas.Canvas):
-    #TODO: setting width, height
     def __init__(self, width=500,height=300):
-        super().__init__(size=[width,height])
-        self.canvwidth=0
-        self.canvheight=0
+        super().__init__(width=width,height=height)
+        self.canvwidth=int(width)
+        self.canvheight=int(height)
+        self.size=[self.canvwidth,self.canvheight]
+
         self.scrollregion=None
         self.canvas_objects=[]
 
@@ -221,8 +222,8 @@ class TurtleScreen(turtle.TurtleScreen):
     def __init__(self, cv, mode=_CFG["mode"],
                  colormode=_CFG["colormode"], delay=_CFG["delay"]):        
         self.cv = cv
-        w = int(self.cv.cget("width"))
-        h = int(self.cv.cget("height"))
+        w = int(self.cv.width)
+        h = int(self.cv.height)
         self.cv.config(scrollregion = (-w//2, -h//2, w//2, h//2 ))
         self.canvwidth = w
         self.canvheight = h

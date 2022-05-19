@@ -2,6 +2,10 @@
 
 ![Demo](Images/TurtleWin.gif)
 
+
+Turtle graphics based on ipycanvas which can run on jupyter lab/notebook/vscode.
+
+
 https://github.com/williamnavaraj/ipyturtle3/blob/main/Images/TurtleWin.gif
 
 ## Usage: Installation

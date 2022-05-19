@@ -5,3 +5,4 @@ ipyturtle3.egg-info/
 dist/
 /__pycache__/
 HowToBuild.txt
+ipyturtle3/test.ipynb

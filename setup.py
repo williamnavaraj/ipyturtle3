@@ -6,8 +6,8 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='ipyturtle3',
-    version='0.1.2',    
-    description='Turtle graphics based on ipycanvas which can run on jupyter lab/vscode. ',
+    version='0.1.3',    
+    description='Turtle graphics based on ipycanvas which can run on jupyter lab/notebook/vscode. ',
     url='https://github.com/williamnavaraj/ipyturtle3.git',
     author='William Navaraj',
     author_email='williamnavaraj@gmail.com',
