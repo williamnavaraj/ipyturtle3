@@ -3,7 +3,7 @@
 #
 # ipyturtle3.py: an ipycanvas based turtle graphics module for Python
 # implemented as wrapper around turtle.py which ships with python
-# Version 0.1.3 - 19. 5. 2022
+# Version 0.1.4 - 04. 06. 2022
 #
 # Copyright [2022] [William Navaraj]
 
@@ -332,7 +332,10 @@ class TurtleScreen(turtle.TurtleScreen):
                 if i["ID"]==0:
                     self.cv.fill_style=self.cv.background_color
                     self.cv.fill_rect(0, 0, self.cv.canvwidth, self.cv.canvheight)
+                    self.cv.line_width=1.0
                 elif i["Type"]=="Polygon":
+                    if i['Width'] !="":
+                        self.cv.line_width=float(i['Width'])
                     if i['Fill'] !="":
                         self.cv.fill_style=i['Fill']
                     if i['Outline'] != "":
@@ -341,7 +344,10 @@ class TurtleScreen(turtle.TurtleScreen):
                     pg=[(L[i]+self.cv.canvwidth/2,L[i+1]+self.cv.canvheight/2) for i in range(0, len(L),2)]
                     self.cv.fill_polygon(pg)
                     self.cv.stroke_polygon(pg)
+                    self.cv.line_width=1.0
                 elif i["Type"]=="Line":
+                    if i['Width'] !="":
+                        self.cv.line_width=float(i['Width'])
                     if i['Fill'] !="":
                         self.cv.fill_style=i['Fill']
                         self.cv.stroke_style=i['Fill']
@@ -349,6 +355,7 @@ class TurtleScreen(turtle.TurtleScreen):
                     if (len(L)>=4):
                         pg=[(L[i]+self.cv.canvwidth/2,L[i+1]+self.cv.canvheight/2) for i in range(0, len(L),2)] #[L[0]+self.cv.canvwidth/2,L[1]+self.cv.canvheight/2, L[2]+self.cv.canvwidth/2,L[3]+self.cv.canvheight/2 ]
                         self.cv.stroke_lines(pg)
+                    self.cv.line_width=1.0
                 elif i["Type"]=="Image":
                     if(i["isNull"]==False):
                         #pass
